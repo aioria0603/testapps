@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta charset="UTF-8">
+    <!--画面共有のスクリプト-->
+    <meta http-equiv="pragma" content="no-cache"/>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="Display Media Stream"/>
+<script>
+  var localVideo = null;
+  
+  function gotLocalMediaStream( mediaStream ){
+    localVideo.srcObject = mediaStream;
+  }
+  
+  function handleLocalMediaStreamError( error ){
+    console.log( "navigator.getUserMedia error: ", error );
+  }
+  
+  
+  $(function(){
+    //. 画面サイズ取得
+    var sw = window.parent.screen.width;
+    var sh = window.parent.screen.height;
+    //sw : sh = x : 480; => x = 480 * sw / sh;
+    var x = Math.floor( 480 * sw / sh );
+    $('#video').css( { width: x } );
+  
+    var mediaStreamConstraints = { video: true };
+    localVideo = document.querySelector( "video" );
+    navigator.mediaDevices.getDisplayMedia( mediaStreamConstraints ).then( gotLocalMediaStream ).catch( handleLocalMediaStreamError );
+  });
+  </script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
+    </style>
+<!--終わり-->>
+    <title>SkyWay - Room example</title>
+    <link rel="stylesheet" href="../_shared/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="heading">Room example</h1>
+      <p class="note">
+        Change Room mode (before join in a room):
+        <a href="#">mesh</a> / <a href="#sfu">sfu</a>
+      </p>
+      <div class="room">
+        <div>
+          <div>
+            <!--画面共有のワイプ部分-->>
+            <video autoplay playsinline id="video" width="640" height="480"></video>
+          </div>
+          <video id="js-local-stream"></video>
+          <span id="js-room-mode"></span>:
+          <input type="text" placeholder="Room Name" id="js-room-id">
+          <button id="js-join-trigger">Join</button>
+          <button id="js-leave-trigger">Leave</button>
+        </div>
+        
+        <div class="remote-streams" id="js-remote-streams"></div>
+
+        <div>
+          <pre class="messages" id="js-messages"></pre>
+          <input type="text" id="js-local-text">
+          <button id="js-send-trigger">Send</button>
+        </div>
+
+      </div>
+      <p class="meta" id="js-meta"></p>
+    </div>
+    <script src="//cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script src="../_shared/key.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
